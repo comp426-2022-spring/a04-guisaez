@@ -54,8 +54,7 @@ app.use((req, res, next) => {
         useragent: req.headers['user-agent']
     }
 
-    const stmt = database.prepare(`INSERT INTO accesslog (remote_addr, remote_user, time, method, url, protocol, httpversion, secure, status, referer, user_agent
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    const stmt = database.prepare(`INSERT INTO accesslog (remote_addr, remote_user, time, method, url, protocol, http_version, secure, status, referer_url, user_agent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
     stmt.run(logdata.remoteaddr, String(logdata.remoteuser), logdata.time, logdata.method, logdata.url, logdata.protocol, logdata.httpversion, String(logdata.secure), logdata.status, logdata.referer, logdata.useragent);
     next();
 })
@@ -81,4 +80,3 @@ if(args.debug == true) {
         throw new Error("Error test successful.")
     })
 }
-
