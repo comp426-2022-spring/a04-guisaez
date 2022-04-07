@@ -22,7 +22,7 @@ if (row == undefined){
             http_version TEXT,
             secure TEXT,
             status TEXT,
-            referer TEXT,
+            referer_url TEXT,
             user_agent TEXT
         );
     `;
