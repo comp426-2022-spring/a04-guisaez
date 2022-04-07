@@ -67,7 +67,7 @@ if(args.log) {
 if(args.debug) {
     app.get('/app/log/access', (req, res) => {
         try {
-            const stmt = database.prepare('SELECT * FROM accesslog').all();
+            const stmt = database.prepare('SELECT * FROM access.log').all();
             res.status(200).json(stmt)
         } catch(e) {
             console.error(e)
