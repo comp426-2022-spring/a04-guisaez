@@ -61,8 +61,6 @@ app.use((req, res, next) => {
 if(args.log == true) {
     const accesslog = fs.createWriteStream('access.log', {flags: 'a'});
     app.use(morgan('combined', {stream: accesslog }))
-} else{
-    app.use(morgan("tiny"))
 }
 
 if(args.debug == true) {
