@@ -3,29 +3,29 @@ const { appendFile } = require('fs');
 
 const logdb = new database('log.db')
 
-const row = logdb.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='accesslog'; `).get();
+const stmt = logdb.prepare(`SELECT name FROM sqlite_master WHERE type='table' and name='accesslog';`).get();
 
-if (row == undefined){
-    console.log('Log database appears to be empty. Creating log database...')
+if (stmt == undefined){
+    console.log('Log database appears to be empty. Creating log database.')
 
     const sqlInit = `
         CREATE TABLE accesslog (
             id INTEGER PRIMARY KEY,
-            remote_addr VARCHAR,
-            remote_user VARCHAR,
-            time VARCHAR,
-            method VARCHAR,
-            url VARCHAR,
-            protocol VARCHAR,
-            http_version NUMERIC,
-            secure INTEGER,
-            status INTEGER,
-            referer VARCHAR,
-            user_agent VARCHAR
+            remote_addr TEXT,
+            remote_user TEXT,
+            time NUMBER,
+            method TEXT,
+            url TEXT,
+            protocol TEXT,
+            http_version TEXT,
+            secure TEXT,
+            status TEXT,
+            referer TEXT,
+            user_agent TEXT
         );
-    `
-        
+    `;
     logdb.exec(sqlInit);
+    console.log("DataBase Initialized");
 }
 else{
     console.log('Log database found!')

@@ -9,6 +9,7 @@ const args = require('minimist')(process.argv.slice(2), {
     default: {
         debug: false,
         boolean: true,
+        log: false,
     }
 }) 
 args['port', 'log', 'debug']
@@ -28,11 +29,11 @@ if (args.help) {
 
 const database = require('./database')
 
-app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(express.json())
 
 // Handling Port for App to Listen
-const port = args.port || process.env.PORT || 5555
+const port = args.port|| 5555
 
 const server = app.listen(port, () => {
     console.log('App is running on port %PORT%'.replace('%PORT%', port))
@@ -54,19 +55,19 @@ app.use((req, res, next) => {
     }
 
     const stmt = database.prepare(`INSERT INTO accesslog (remote_addr, remote_user, time, method, url, protocol, httpversion, secure, status, referer, user_agent
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-    stmt.run(Object.values(logdata))
-    next()
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    stmt.run(logdata.remoteaddr, String(logdata.remoteuser), logdata.time, logdata.method, logdata.url, logdata.protocol, logdata.httpversion, String(logdata.secure), logdata.status, logdata.referer, logdata.useragent);
+    next();
 })
 
-if(args.log) {
+if(args.log == true) {
     const accesslog = fs.createWriteStream('access.log', {flags: 'a'});
     app.use(morgan('combined', {stream: accesslog }))
 } else{
     app.use(morgan("tiny"))
 }
 
-if(args.debug) {
+if(args.debug == true) {
     app.get('/app/log/access', (req, res) => {
         try {
             const stmt = database.prepare('SELECT * FROM accesslog').all();
