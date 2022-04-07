@@ -60,14 +60,16 @@ app.use((req, res, next) => {
 })
 
 if(args.log) {
-    const WRITESTREAM = fs.createWriteStream('access.log', {flags: 'a'});
-    app.use(morgan('combined', {stream: WRITESTREAM }))
+    const accesslog = fs.createWriteStream('access.log', {flags: 'a'});
+    app.use(morgan('combined', {stream: accesslog }))
+} else{
+    app.use(morgan("tiny"))
 }
 
 if(args.debug) {
     app.get('/app/log/access', (req, res) => {
         try {
-            const stmt = database.prepare('SELECT * FROM access.log').all();
+            const stmt = database.prepare('SELECT * FROM accesslog').all();
             res.status(200).json(stmt)
         } catch(e) {
             console.error(e)
